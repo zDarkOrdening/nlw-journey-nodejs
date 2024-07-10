@@ -1,4 +1,4 @@
-POST http://localhost:3000/trips
+POST http://localhost:3333/trips
 Content-Type: application/json
 
 {
@@ -9,4 +9,8 @@ Content-Type: application/json
   "owner_email": "leonardo@gmail.com",
   "emails_to_invite": ["bisgas@xernas.com", "xernas@bisgas.com"]
 }
+###
+GET http://localhost:3333/trips/8e5ee551-43fc-441d-8148-fc398fb262ce/confirm
+###
+GET http://localhost:3333/participants/0502a5e9-588d-46f5-83b4-ff739381e9be/confirm
 ###

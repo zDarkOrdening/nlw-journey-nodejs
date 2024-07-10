@@ -1,0 +1,40 @@
+import type { FastifyInstance } from "fastify";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { z } from "zod";
+import { prisma } from "../lib/prisma";
+
+export async function confirmParticipant(fastify: FastifyInstance) {
+  fastify.withTypeProvider<ZodTypeProvider>().get("/participants/:participantId/confirm", {
+    schema: {
+      params: z.object({
+        participantId: z.string().uuid()
+      })
+    }
+  }, async (req, res) => {
+    const { participantId } = req.params
+
+    const participant = await prisma.participant.findUnique({
+      where: {
+        id: participantId
+      }
+    })
+
+    if (!participant) {
+      throw new Error("Participant not found.")
+    }
+
+    if (participant.is_confirmed) {
+      return res.redirect(`http://localhost:3000/trips/${participant.trip_id}`)
+    }
+
+    await prisma.participant.update({
+      where: {
+        id: participant.id
+      },
+      data: { is_confirmed: true}
+    })
+
+    res.status(200)
+    return res.redirect(`http://localhost:3000/trips/${participant.trip_id}`)
+  })
+}
