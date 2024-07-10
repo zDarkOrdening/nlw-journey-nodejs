@@ -2,10 +2,9 @@ import type { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
 import { z } from "zod"
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { dayjs } from "../lib/dayjs";
 
-export async function getLinks(fastify: FastifyInstance) {
-  fastify.withTypeProvider<ZodTypeProvider>().get("/trips/:tripId/links", {
+export async function getParticipants(fastify: FastifyInstance) {
+  fastify.withTypeProvider<ZodTypeProvider>().get("/trips/:tripId/participants", {
     schema: {
       params: z.object({
         tripId: z.string().uuid()
@@ -19,7 +18,14 @@ export async function getLinks(fastify: FastifyInstance) {
         id: tripId
       },
       include: {
-        links: true
+        participants: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            is_confirmed: true
+          },
+        }
       }
     })
 
@@ -28,6 +34,6 @@ export async function getLinks(fastify: FastifyInstance) {
     }
 
     res.status(200)
-    return { statusCode: 200, message: "Success on getting links.", links: trip.links }
+    return { statusCode: 200, message: "Success on getting participants.", participants: trip.participants }
   })
 }

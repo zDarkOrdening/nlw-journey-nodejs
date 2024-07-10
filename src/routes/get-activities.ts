@@ -44,7 +44,7 @@ export async function getActivities(fastify: FastifyInstance) {
       }
     })
 
-    res.status(201)
-    return { statusCode: 201, message: "Success on getting activities.", activities }
+    res.status(200)
+    return { statusCode: 200, message: "Success on getting activities.", activities }
   })
 }
