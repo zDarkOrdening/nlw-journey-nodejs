@@ -11,6 +11,8 @@ import { getLinks } from "./routes/get-links";
 import { getParticipants } from "./routes/get-participants";
 import { createInvite } from "./routes/create-invite";
 import { updateTrip } from "./routes/update-trip";
+import { getTripDetails } from "./routes/get-trip-details";
+import { getPartipant } from "./routes/get-participant";
 
 const PORT = 3333
 const fastify = Fastify()
@@ -32,6 +34,8 @@ fastify.register(getLinks)
 fastify.register(getParticipants)
 fastify.register(createInvite)
 fastify.register(updateTrip)
+fastify.register(getTripDetails)
+fastify.register(getPartipant)
 
 fastify.listen({ port: PORT }).then(() => {
   console.log(`Server listening on port ${PORT}`)

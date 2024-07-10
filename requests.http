@@ -25,6 +25,9 @@ Content-Type: application/json
   "ends_at": "2024-08-09 23:59:59"
 }
 ###
+# Get Trip Details
+GET http://localhost:3333/trips/ea7a8aba-4c3f-4653-a4d9-51788a3312a7
+###
 # Confirm Participant
 GET http://localhost:3333/participants/0502a5e9-588d-46f5-83b4-ff739381e9be/confirm
 ###
@@ -62,3 +65,7 @@ Content-Type: application/json
 {
   "email": "kernas@zernas.com"
 }
+###
+# Get Participant
+GET http://localhost:3333/participants/0502a5e9-588d-46f5-83b4-ff739381e9be
+###
