@@ -5,6 +5,8 @@ import { z } from "zod"
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { getMailClient } from "../lib/mail";
 import { dayjs } from "../lib/dayjs";
+import { ClientError } from "../errors/client-error";
+import { env } from "../env";
 
 export async function createTrip(fastify: FastifyInstance) {
   fastify.withTypeProvider<ZodTypeProvider>().post("/trips", {
@@ -21,12 +23,12 @@ export async function createTrip(fastify: FastifyInstance) {
   }, async (req, res) => {
     const { destination, starts_at, ends_at, owner_name, owner_email, emails_to_invite } = req.body
 
-    if(dayjs(starts_at).isBefore(new Date())) {
-      throw new Error("Invalid trip start date.")
+    if (dayjs(starts_at).isBefore(new Date())) {
+      throw new ClientError("Invalid trip start date.")
     }
 
-    if(dayjs(ends_at).isBefore(starts_at)) {
-      throw new Error("Invalid trip end date.")
+    if (dayjs(ends_at).isBefore(starts_at)) {
+      throw new ClientError("Invalid trip end date.")
     }
 
     const trip = await prisma.trip.create({
@@ -56,7 +58,7 @@ export async function createTrip(fastify: FastifyInstance) {
     const formattedStartDate = dayjs(starts_at).format("LL")
     const formattedEndDate = dayjs(ends_at).format("LL")
 
-    const confirmationLink = `http://localhost:3000/trips/${trip.id}/confirm`
+    const confirmationLink = `${env.API_BASE_URL}/trips/${trip.id}/confirm`
 
     const mail = await getMailClient()
     const message = await mail.sendMail({
@@ -87,6 +89,6 @@ export async function createTrip(fastify: FastifyInstance) {
     console.log(nodemailer.getTestMessageUrl(message))
 
     res.status(201)
-    return { statusCode: 201, message: "Success on registering trip.", tripId: trip.id}
+    return { statusCode: 201, message: "Success on registering trip.", tripId: trip.id }
   })
 }

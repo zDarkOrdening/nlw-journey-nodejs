@@ -13,8 +13,9 @@ import { createInvite } from "./routes/create-invite";
 import { updateTrip } from "./routes/update-trip";
 import { getTripDetails } from "./routes/get-trip-details";
 import { getPartipant } from "./routes/get-participant";
+import { errorHandler } from "./error-handler";
+import { env } from "./env";
 
-const PORT = 3333
 const fastify = Fastify()
 
 fastify.register(cors, {
@@ -23,6 +24,8 @@ fastify.register(cors, {
 
 fastify.setValidatorCompiler(validatorCompiler)
 fastify.setSerializerCompiler(serializerCompiler)
+
+fastify.setErrorHandler(errorHandler)
 
 fastify.register(createTrip)
 fastify.register(confirmTrip)
@@ -37,8 +40,8 @@ fastify.register(updateTrip)
 fastify.register(getTripDetails)
 fastify.register(getPartipant)
 
-fastify.listen({ port: PORT }).then(() => {
-  console.log(`Server listening on port ${PORT}`)
+fastify.listen({ port: env.PORT }).then(() => {
+  console.log(`Server listening on port ${env.PORT}`)
 }).catch((err) => {
-  console.error(`Error on listening to port ${PORT}: ${err}`)
+  console.error(`Error on listening to port ${env.PORT}: ${err}`)
 });
